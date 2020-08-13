@@ -24,7 +24,7 @@ void UOpenDoor::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
 	
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
-	TargetYaw = InitialYaw + 90.f;
+	TargetYaw += InitialYaw;
 
 	// ...
 	
