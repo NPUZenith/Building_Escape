@@ -3,6 +3,8 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -30,6 +32,8 @@ void UOpenDoor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has the Open Door component on it, but no pressure plate set!"), *GetOwner()->GetName())
 	}
+
+	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
