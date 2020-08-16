@@ -26,7 +26,7 @@ void UOpenDoor::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());*/
 	
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
-	TargetYaw += InitialYaw;
+	OpenAngle += InitialYaw;
 
 	if (!PressurePlate)
 	{
@@ -62,7 +62,7 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
 	FRotator DoorRotation;
-	DoorRotation.Yaw = FMath::FInterpTo(CurrentYaw, TargetYaw, DeltaTime, 1.f);
+	DoorRotation.Yaw = FMath::FInterpTo(CurrentYaw, OpenAngle, DeltaTime, 1.f);
 	GetOwner()->SetActorRotation(DoorRotation);
 }
 
