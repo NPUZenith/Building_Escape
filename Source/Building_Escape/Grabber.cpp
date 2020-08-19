@@ -26,6 +26,16 @@ void UGrabber::BeginPlay()
 	SetupInputComponent();
 }
 
+//Finds the physics handle component
+void UGrabber::FindPhysicsHandle()
+{
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has the Grabber component on it, but not the Physics Handle component"), *GetOwner()->GetName());
+	}
+}
+
 void UGrabber::SetupInputComponent()
 {
 	Input = GetOwner()->FindComponentByClass<UInputComponent>();
@@ -37,16 +47,6 @@ void UGrabber::SetupInputComponent()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has the Grabber component on it, but not the input component"), *GetOwner()->GetName());
-	}
-}
-
-//Finds the physics handle component
-void UGrabber::FindPhysicsHandle()
-{
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (!PhysicsHandle)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s has the Grabber component on it, but not the Physics Handle component"), *GetOwner()->GetName());
 	}
 }
 

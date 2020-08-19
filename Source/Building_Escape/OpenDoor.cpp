@@ -1,6 +1,7 @@
 // Copyright Maanav Rao 2020
 
 #include "OpenDoor.h"
+#include "Components/AudioComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
@@ -28,10 +29,25 @@ void UOpenDoor::BeginPlay()
 	
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
 	OpenAngle += InitialYaw;
+	
+	FindAudio();
+	PressurePlateCheck();
+}
 
+void UOpenDoor::PressurePlateCheck()
+{
 	if (!PressurePlate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has the Open Door component on it, but no pressure plate set!"), *GetOwner()->GetName())
+	}
+}
+
+void UOpenDoor::FindAudio()
+{
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+	if (!AudioComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No audio component found on %s"), *GetOwner()->GetName());
 	}
 }
 
@@ -62,6 +78,14 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 	FRotator DoorRotation;
 	DoorRotation.Yaw = FMath::FInterpTo(CurrentYaw, OpenAngle, DeltaTime, 1.f);
 	GetOwner()->SetActorRotation(DoorRotation);
+	
+	CloseDoorSoundPlayed = false;
+	if (!AudioComponent) { return; }
+	if (!OpenDoorSoundPlayed)
+	{
+		AudioComponent->Play();
+		OpenDoorSoundPlayed = true;
+	}
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
@@ -70,6 +94,14 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator DoorRotation;
 	DoorRotation.Yaw = FMath::FInterpTo(CurrentYaw, InitialYaw, DeltaTime, 2.f);
 	GetOwner()->SetActorRotation(DoorRotation);
+	
+	OpenDoorSoundPlayed = false;
+	if (!AudioComponent) { return; }
+	if (!CloseDoorSoundPlayed)
+	{
+		AudioComponent->Play();
+		CloseDoorSoundPlayed = true;
+	}
 }
 
 float UOpenDoor::TotalMassOfActors() const
